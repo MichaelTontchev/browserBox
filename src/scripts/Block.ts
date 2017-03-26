@@ -1,4 +1,5 @@
 import { ISpaceOccupying, IPoint } from './Space';
+import { blockSize } from './Constants';
 
 export class Block implements ISpaceOccupying {
     public readonly x: number;
@@ -6,8 +7,8 @@ export class Block implements ISpaceOccupying {
     public readonly color: string;
 
     constructor(x: number, y: number, color: string) {
-        this.x = x;
-        this.y = y;
+        this.x = x - (x % blockSize);
+        this.y = y - (y % blockSize);
         this.color = color;
     }
 
