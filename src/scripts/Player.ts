@@ -1,13 +1,14 @@
 import { Keyboard } from './Keyboard';
 import { Space } from './Space';
+import { blockSize } from './Constants';
 
 export class Player {
     private static player = document.getElementById('player') || new HTMLElement();
 
     public static readonly instance = new Player();
 
-    public readonly width = 15;
-    public readonly height = 30;
+    public readonly width = blockSize;
+    public readonly height = blockSize * 2;
     public readonly speed = 2;
 
     public isFalling = false;
@@ -46,16 +47,45 @@ export class Player {
 
     private moveTick() {
         let currPlayerX = this.getX();
+        let currPlayerY = this.getY();
 
         if (Keyboard.leftKeyDown) {
-            this.setX(currPlayerX - this.speed);
+            const isFutureBlockFree = !Space.fuzzyHasBlock(currPlayerX - this.speed, currPlayerY);
+
+            let allowedMovementDisplacement;
+
+            if (isFutureBlockFree) {
+                allowedMovementDisplacement = this.speed;
+            } else {
+                const remainingDistanceUntilFutureBlock = currPlayerX % blockSize;
+
+                allowedMovementDisplacement = remainingDistanceUntilFutureBlock;
+            }
+
+            this.setX(currPlayerX - allowedMovementDisplacement);
         } else if (Keyboard.rightKeyDown) {
-            this.setX(currPlayerX + this.speed)
+            const possibleFutureLocation = currPlayerX + this.speed + this.width;
+
+            const isFutureBlockFree = !Space.fuzzyHasBlock(possibleFutureLocation, currPlayerY);
+
+            let allowedMovementDisplacement;
+
+            if (isFutureBlockFree) {
+                allowedMovementDisplacement = this.speed;
+            } else {
+                const beginningOfFutureBlock = possibleFutureLocation - (possibleFutureLocation % blockSize);
+
+                const remainingDistanceUntilFutureBlock = beginningOfFutureBlock - (currPlayerX + this.width);
+
+                allowedMovementDisplacement = remainingDistanceUntilFutureBlock;
+            }
+
+            this.setX(currPlayerX + allowedMovementDisplacement);
         }
     }
 
     private jumpTick() {
-        if(this.isOnGround) {
+        if (this.isOnGround) {
             this.ascendingTickCount = 0;
         }
 
@@ -76,16 +106,24 @@ export class Player {
     }
 
     private gravityTick() {
-        var currPlayerY = this.getY();
-        var currPlayerX = this.getX();
+        const gravitySpeed = 2;
 
-        const isBlockBelowFree = !Space.fuzzyHasBlock(currPlayerX, currPlayerY - 1);
+        const currPlayerX = this.getX();
+        const currPlayerY = this.getY();
 
-        if (isBlockBelowFree) {
+        const areBlocksBelowFeetFree =
+            !Space.fuzzyHasBlock(currPlayerX, currPlayerY - gravitySpeed)
+            && !Space.fuzzyHasBlock(currPlayerX + this.width, currPlayerY - gravitySpeed);
+
+        if (areBlocksBelowFeetFree) {
             this.isOnGround = false;
 
-            this.setY(currPlayerY - 2);
+            this.setY(currPlayerY - gravitySpeed);
         } else {
+            const remainingDistanceUntilBlockBelow = currPlayerY % blockSize;
+
+            this.setY(currPlayerY - remainingDistanceUntilBlockBelow);
+
             this.isOnGround = true;
         }
     }

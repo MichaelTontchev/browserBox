@@ -1,5 +1,6 @@
 import { Player } from './Player';
 import { Space } from './Space';
+import { Block } from './Block';
 
 var canvas = document.getElementById('canvas') || new HTMLElement();
 
@@ -18,35 +19,49 @@ export interface IBlock {
 }
 
 var blocks = [
-    { left: 240, bottom: 135, color: "brown" },
-    { left: 255, bottom: 135, color: "brown" },
-    { left: 270, bottom: 135, color: "brown" },
-    { left: 285, bottom: 135, color: "brown" },
-    { left: 300, bottom: 135, color: "brown" },
-    { left: 315, bottom: 135, color: "brown" },
-    { left: 225, bottom: 120, color: "brown" },
-    { left: 210, bottom: 120, color: "brown" },
-    { left: 195, bottom: 120, color: "brown" },
-    { left: 180, bottom: 120, color: "brown" },
-    { left: 165, bottom: 120, color: "brown" },
-    { left: 150, bottom: 120, color: "brown" },
-    { left: 135, bottom: 120, color: "brown" },
-    { left: 120, bottom: 120, color: "brown" },
+    new Block(225, 120, "brown"),
+    new Block(210, 120, "brown"),
+    new Block(195, 120, "brown"),
+    new Block(180, 120, "brown"),
+    new Block(165, 120, "brown"),
+    new Block(150, 120, "brown"),
+    new Block(135, 120, "brown"),
+    new Block(120, 120, "brown"),
+    new Block(105, 135, "brown"),
+
+    new Block(240, 135, "brown"),
+    new Block(255, 135, "brown"),
+    new Block(270, 135, "brown"),
+    new Block(285, 135, "brown"),
+    new Block(300, 135, "brown"),
+    new Block(315, 135, "brown"),
+
+    new Block(330, 180, "brown"),
+    new Block(345, 180, "brown"),
+    new Block(360, 180, "brown"),
+    new Block(375, 180, "brown"),
+    new Block(390, 180, "brown"),
+
+    new Block(405, 225, "brown"),
+    new Block(420, 225, "brown"),
+    new Block(435, 225, "brown"),
+    new Block(450, 225, "brown"),
+    new Block(465, 225, "brown"),
 ];
 
-var space: { [key: string]: IBlock } = {};
-
-(function renderBlocks() {
+(function renderElements() {
     blocks.forEach(function (block) {
         var node = document.createElement("div");
         node.className = 'block';
-        node.style.bottom = block.bottom + 'px';
-        node.style.left = block.left + 'px';
+        node.style.bottom = block.y + 'px';
+        node.style.left = block.x + 'px';
         node.style.backgroundColor = block.color;
         canvas.appendChild(node);
 
-        Space.putBlock(block);
+        Space.put(block);
     });
+
+    Space.put
 })();
 
 var hitPlayer = false;
