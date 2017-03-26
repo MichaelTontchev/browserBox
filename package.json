@@ -1,0 +1,24 @@
+{
+  "name": "browser-box",
+  "version": "0.1.0",
+  "description": "2D sandbox game in your browser!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSE",
+  "devDependencies": {
+    "browserify": "^13.3.0",
+    "event-stream": "^3.3.4",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-util": "^3.0.8",
+    "tsify": "^3.0.0",
+    "typescript": "^2.2.1",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.8.0"
+  },
+  "dependencies": {}
+}
