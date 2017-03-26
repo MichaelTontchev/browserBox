@@ -1,5 +1,5 @@
 import { Keyboard } from './Keyboard';
-import { Space, ISpaceOccupying, IPoint } from './Space';
+import { Space, ISpaceOccupying, IPoint, gravitySpeed } from './Space';
 import { blockSize } from './Constants';
 
 export class Player implements ISpaceOccupying {
@@ -97,7 +97,7 @@ export class Player implements ISpaceOccupying {
             this.ascendingTickCount = 0;
         }
 
-        const doneWithAscendingTicks = this.ascendingTickCount === 38;
+        const doneWithAscendingTicks = this.ascendingTickCount >= 38;
         const haveJumped = this.ascendingTickCount > 0;
 
         if (this.isOnGround && !this.tryJumping
@@ -106,7 +106,9 @@ export class Player implements ISpaceOccupying {
             return;
         }
 
-        const coordinatesForFutureSpaces = Space.getCoordinatesForFutureSpaces(this.getCoordinatesForSpaces(), 0, this.jumpSpeed);
+        const netSpeed = this.jumpSpeed - gravitySpeed;
+
+        const coordinatesForFutureSpaces = Space.getCoordinatesForFutureSpaces(this.getCoordinatesForSpaces(), 0, netSpeed);
         const areFutureBlocksFree = !Space.fuzzyHaveBlocks(coordinatesForFutureSpaces);
 
         let allowedMovementDisplacement = 0;
@@ -115,7 +117,7 @@ export class Player implements ISpaceOccupying {
         if (areFutureBlocksFree) {
             allowedMovementDisplacement = this.jumpSpeed;
         } else {
-            const possibleFutureLocation = currPlayerY + this.height + this.jumpSpeed;
+            const possibleFutureLocation = currPlayerY + this.height + netSpeed;
 
             const beginningOfFutureBlock = possibleFutureLocation - (possibleFutureLocation % blockSize);
 
@@ -126,12 +128,14 @@ export class Player implements ISpaceOccupying {
         
         this.setY(currPlayerY + allowedMovementDisplacement);
 
+        if(allowedMovementDisplacement === 0) {
+            this.ascendingTickCount = 38;
+        }
+
         this.ascendingTickCount++;
     }
 
     private gravityTick() {
-        const gravitySpeed = 2;
-
         const currPlayerX = this.getX();
         const currPlayerY = this.getY();
 
