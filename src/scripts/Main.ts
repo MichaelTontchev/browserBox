@@ -3,7 +3,7 @@ import { Space } from './Space';
 
 var canvas = document.getElementById('canvas') || new HTMLElement();
 
-var player = Player.instance;
+export const player = Player.instance;
 
 var canvasWidth = 500;
 var canvasHeight = 500;
@@ -36,28 +36,6 @@ var blocks = [
 
 var space: { [key: string]: IBlock } = {};
 
-(function setupKeyBoardListeners() {
-    document.addEventListener('keydown', function (e) {
-        if (e.keyCode === 37 || e.keyCode === 65) {
-            leftKeyDown = true;
-        } else if (e.keyCode === 39 || e.keyCode === 68) {
-            rightKeyDown = true;
-        } else if (e.keyCode === 32 || e.keyCode === 87) {
-            if (!player.isFalling) {
-                jumpUp();
-            }
-        }
-    });
-
-    document.addEventListener('keyup', function (e) {
-        if (e.keyCode == 37 || e.keyCode == 65) {
-            leftKeyDown = false;
-        } else if (e.keyCode == 39 || e.keyCode == 68) {
-            rightKeyDown = false;
-        }
-    });
-})();
-
 (function renderBlocks() {
     blocks.forEach(function (block) {
         var node = document.createElement("div");
@@ -71,48 +49,8 @@ var space: { [key: string]: IBlock } = {};
     });
 })();
 
-function jumpUp() {
-    var repetitions = 0;
-
-    var jumpInterval = setInterval(function () {
-        if (repetitions === 38) {
-            clearInterval(jumpInterval);
-        }
-
-        var currPlayerY = player.getY();
-
-        player.setY(currPlayerY + 4);
-
-        repetitions++;
-    }, 5);
-}
-
 var hitPlayer = false;
 
 setInterval(function tick() {
-    (function movePlayer() {
-        var currPlayerX = player.getX();
-
-        if (leftKeyDown) {
-            player.setX(currPlayerX - player.speed);
-        } else if (rightKeyDown) {
-            player.setX(currPlayerX + player.speed)
-        }
-    })();
-
-    (function gravity() {
-        var currPlayerY = player.getY();
-        var currPlayerX = player.getX();
-
-        const isBlockBelowFree = !Space.fuzzyHasBlock(currPlayerX, currPlayerY - 1);
-
-        if (isBlockBelowFree) {
-            player.isFalling = true;
-            
-            player.setY(currPlayerY - 2);
-        } else {
-            player.isFalling = false;
-        }
-
-    })();
+    player.tick();
 }, 5);
