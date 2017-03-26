@@ -16,3 +16,20 @@
     width: 15px;
     height: 15px;
 }
+#newMapBlocks {
+    border: 0;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 230px;
+    height: 150px;
+}
+@media (max-width: 1000px) {
+  #newMapBlocks {
+      position: relative;
+      display: block;
+      margin: 20 auto 0 auto;
+      top: initial;
+      left: initial;
+  }
+}

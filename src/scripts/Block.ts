@@ -1,7 +1,7 @@
 import { ISpaceOccupying, IPoint } from './Space';
 import { blockSize } from './Constants';
 
-export class Block implements ISpaceOccupying {
+export class Block implements ISpaceOccupying, IPoint {
     public readonly x: number;
     public readonly y: number;
     public readonly color: string;
