@@ -5,7 +5,7 @@ export class Player {
 
     public readonly width = 15;
     public readonly height = 30;
-    public readonly speed = 5;
+    public readonly speed = 2;
 
     public isFalling = false;
 

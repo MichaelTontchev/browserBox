@@ -24,6 +24,14 @@ var blocks = [
     { left: 285, bottom: 135, color: "brown" },
     { left: 300, bottom: 135, color: "brown" },
     { left: 315, bottom: 135, color: "brown" },
+    { left: 225, bottom: 120, color: "brown" },
+    { left: 210, bottom: 120, color: "brown" },
+    { left: 195, bottom: 120, color: "brown" },
+    { left: 180, bottom: 120, color: "brown" },
+    { left: 165, bottom: 120, color: "brown" },
+    { left: 150, bottom: 120, color: "brown" },
+    { left: 135, bottom: 120, color: "brown" },
+    { left: 120, bottom: 120, color: "brown" },
 ];
 
 var space: { [key: string]: IBlock } = {};
@@ -76,7 +84,7 @@ function jumpUp() {
         player.setY(currPlayerY + 4);
 
         repetitions++;
-    }, 2);
+    }, 5);
 }
 
 var hitPlayer = false;
@@ -96,35 +104,15 @@ setInterval(function tick() {
         var currPlayerY = player.getY();
         var currPlayerX = player.getX();
 
-        let shouldFall = false;
-        if (currPlayerY % 15 !== 0) {
-            shouldFall = true;
-        } else {
-            const isBlockBelowFree = !Space.fuzzyHasBlock(currPlayerX, currPlayerY - 1);
-            if (isBlockBelowFree) {
-                shouldFall = true;
-            }
-        }
+        const isBlockBelowFree = !Space.fuzzyHasBlock(currPlayerX, currPlayerY - 1);
 
-        if (shouldFall) {
+        if (isBlockBelowFree) {
             player.isFalling = true;
-            player.setY(currPlayerY - 4);
+            
+            player.setY(currPlayerY - 2);
         } else {
             player.isFalling = false;
         }
 
     })();
-
-    (function handleCollision() {
-        var currPlayerX = player.getX();
-        var currPlayerY = player.getY();
-
-        if (1 + 1 === 3) {
-            if (!hitPlayer) {
-                hitPlayer = true;
-            }
-        } else {
-            hitPlayer = false;
-        }
-    })();
-}, 10);
+}, 5);
