@@ -46,6 +46,12 @@ var blocks = [
     new Block(375, 180, "brown"),
     new Block(390, 180, "brown"),
 
+    new Block(330, 270, "brown"),
+    new Block(345, 270, "brown"),
+    new Block(360, 270, "brown"),
+    new Block(375, 270, "brown"),
+    new Block(390, 270, "brown"),
+
     new Block(405, 225, "brown"),
     new Block(420, 225, "brown"),
     new Block(435, 225, "brown"),
