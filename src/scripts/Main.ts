@@ -1,16 +1,14 @@
 import { Player } from './Player';
 import { Space } from './Space';
 import { Block } from './Block';
+import { Designer } from './Designer';
 
-var canvas = document.getElementById('canvas') || new HTMLElement();
+export const canvas = document.getElementById('canvas') || new HTMLElement();
 
 export const player = Player.instance;
 
-var canvasWidth = 500;
-var canvasHeight = 500;
-
-var rightKeyDown = false;
-var leftKeyDown = false;
+export const canvasWidth = 500;
+export const canvasHeight = 500;
 
 export interface IBlock {
     left: number;
@@ -59,20 +57,28 @@ var blocks = [
     new Block(465, 225, "brown"),
 ];
 
-(function renderElements() {
-    blocks.forEach(function (block) {
-        var node = document.createElement("div");
-        node.className = 'block';
-        node.style.bottom = block.y + 'px';
-        node.style.left = block.x + 'px';
-        node.style.backgroundColor = block.color;
-        canvas.appendChild(node);
+Designer.setup();
 
-        Space.put(block);
+export function renderBlock(block: Block) {
+    var node = document.createElement("div");
+    node.className = 'block';
+    node.style.bottom = block.y + 'px';
+    node.style.left = block.x + 'px';
+    node.style.backgroundColor = block.color;
+    canvas.appendChild(node);
+
+    Space.put(block);
+}
+
+function renderElements() {
+    blocks.forEach(function (block) {
+        renderBlock(block);
     });
 
     Space.movableObjects.push(player);
-})();
+}
+
+renderElements();
 
 var hitPlayer = false;
 
