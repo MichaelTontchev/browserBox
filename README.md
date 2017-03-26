@@ -5,4 +5,4 @@ Sometimes the morning commute by train is boring, so why not use it to make a ga
 
 Written in TypeScript with no libraries at the moment.
 
-See a (likely old) demo at http://codepen.io/anon/pen/ZejVXy?editors=0010
+See a (likely old) demo at http://s.codepen.io/boomerang/iFrameKey-a0bcb922-0254-4627-1e87-80a64cbdc640/index.html?editors=0010
