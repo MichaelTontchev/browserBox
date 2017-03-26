@@ -3,6 +3,10 @@ import { blockSize } from './Constants';
 
 export const gravitySpeed = 2;
 
+export const canvas = document.getElementById('canvas') || new HTMLElement();
+export const canvasWidth = 495;
+export const canvasHeight = 495;
+
 export interface IPoint {
     x: number;
     y: number;

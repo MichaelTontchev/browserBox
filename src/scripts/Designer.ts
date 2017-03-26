@@ -1,5 +1,6 @@
-import { renderBlock, canvas, canvasHeight } from './Main';
+import { renderBlock } from './Main';
 import { Block } from './Block';
+import { canvas, canvasHeight } from './Space';
 
 export class Designer {
     private static readonly newMapBlocksDisplay = document.getElementById('newMapBlocks') || new HTMLElement();

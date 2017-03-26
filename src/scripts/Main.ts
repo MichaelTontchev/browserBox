@@ -1,14 +1,9 @@
 import { Player } from './Player';
-import { Space } from './Space';
+import { Space, canvas } from './Space';
 import { Block } from './Block';
 import { Designer } from './Designer';
 
-export const canvas = document.getElementById('canvas') || new HTMLElement();
-
 export const player = Player.instance;
-
-export const canvasWidth = 500;
-export const canvasHeight = 500;
 
 export interface IBlock {
     left: number;
@@ -79,8 +74,6 @@ function renderElements() {
 }
 
 renderElements();
-
-var hitPlayer = false;
 
 setInterval(function tick() {
     player.tick();
