@@ -29,6 +29,10 @@ var blocks = [
     new Block(120, 120, "brown"),
     new Block(105, 135, "brown"),
 
+    new Block(225, 165, "brown"),
+    new Block(270, 165, "brown"),
+    new Block(270, 180, "brown"),
+
     new Block(240, 135, "brown"),
     new Block(255, 135, "brown"),
     new Block(270, 135, "brown"),
@@ -61,7 +65,7 @@ var blocks = [
         Space.put(block);
     });
 
-    Space.put
+    Space.movableObjects.push(player);
 })();
 
 var hitPlayer = false;

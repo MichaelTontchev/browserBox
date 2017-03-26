@@ -1,15 +1,15 @@
 import { Keyboard } from './Keyboard';
-import { Space } from './Space';
+import { Space, ISpaceOccupying, IPoint } from './Space';
 import { blockSize } from './Constants';
 
-export class Player {
+export class Player implements ISpaceOccupying {
     private static player = document.getElementById('player') || new HTMLElement();
 
     public static readonly instance = new Player();
 
     public readonly width = blockSize;
     public readonly height = blockSize * 2;
-    public readonly speed = 2;
+    public readonly speed = 1;
 
     public isFalling = false;
 
@@ -39,6 +39,16 @@ export class Player {
         Player.player.style.bottom = newY + 'px';
     }
 
+    public getCoordinatesForSpaces(): IPoint[] {
+        const x = this.getX();
+        const y = this.getY();
+
+        return [
+            { x: x, y: y },
+            { x: x, y: y + blockSize }
+        ];
+    }
+
     public tick() {
         this.moveTick();
         this.jumpTick();
@@ -47,41 +57,38 @@ export class Player {
 
     private moveTick() {
         let currPlayerX = this.getX();
-        let currPlayerY = this.getY();
+
+        let allowedMovementDisplacement = 0;
 
         if (Keyboard.leftKeyDown) {
-            const isFutureBlockFree = !Space.fuzzyHasBlock(currPlayerX - this.speed, currPlayerY);
+            const coordinatesForFutureSpaces = Space.getCoordinatesForFutureSpaces(this.getCoordinatesForSpaces(), -this.speed, 0);
+            const areFutureBlocksFree = !Space.fuzzyHaveBlocks(coordinatesForFutureSpaces);
 
-            let allowedMovementDisplacement;
-
-            if (isFutureBlockFree) {
-                allowedMovementDisplacement = this.speed;
+            if (areFutureBlocksFree) {
+                allowedMovementDisplacement = -this.speed;
             } else {
                 const remainingDistanceUntilFutureBlock = currPlayerX % blockSize;
 
-                allowedMovementDisplacement = remainingDistanceUntilFutureBlock;
+                allowedMovementDisplacement = -remainingDistanceUntilFutureBlock;
             }
-
-            this.setX(currPlayerX - allowedMovementDisplacement);
         } else if (Keyboard.rightKeyDown) {
-            const possibleFutureLocation = currPlayerX + this.speed + this.width;
+            const coordinatesForFutureSpaces = Space.getCoordinatesForFutureSpaces(this.getCoordinatesForSpaces(), this.speed + this.width, 0);
+            const areFutureBlocksFree = !Space.fuzzyHaveBlocks(coordinatesForFutureSpaces);
 
-            const isFutureBlockFree = !Space.fuzzyHasBlock(possibleFutureLocation, currPlayerY);
-
-            let allowedMovementDisplacement;
-
-            if (isFutureBlockFree) {
+            if (areFutureBlocksFree) {
                 allowedMovementDisplacement = this.speed;
             } else {
+                const possibleFutureLocation = currPlayerX + this.speed + this.width;
+
                 const beginningOfFutureBlock = possibleFutureLocation - (possibleFutureLocation % blockSize);
 
                 const remainingDistanceUntilFutureBlock = beginningOfFutureBlock - (currPlayerX + this.width);
 
                 allowedMovementDisplacement = remainingDistanceUntilFutureBlock;
             }
-
-            this.setX(currPlayerX + allowedMovementDisplacement);
         }
+
+        this.setX(currPlayerX + allowedMovementDisplacement);
     }
 
     private jumpTick() {
@@ -113,7 +120,7 @@ export class Player {
 
         const areBlocksBelowFeetFree =
             !Space.fuzzyHasBlock(currPlayerX, currPlayerY - gravitySpeed)
-            && !Space.fuzzyHasBlock(currPlayerX + this.width, currPlayerY - gravitySpeed);
+            && !Space.fuzzyHasBlock(currPlayerX + this.width - 1, currPlayerY - gravitySpeed);
 
         if (areBlocksBelowFeetFree) {
             this.isOnGround = false;

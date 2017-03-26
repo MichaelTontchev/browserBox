@@ -13,6 +13,8 @@ export interface ISpaceOccupying {
 export class Space {
     private static space: { [key: string]: ISpaceOccupying } = {};
 
+    public static movableObjects: ISpaceOccupying[] = [];
+
     public static put(object: ISpaceOccupying) {
         let coordinatesOccupied = object.getCoordinatesForSpaces();
 
@@ -27,5 +29,15 @@ export class Space {
 
     public static fuzzyHasBlock(x: number, y: number): boolean {
         return Space.fuzzyGetBlock(x, y) != undefined;
+    }
+
+    public static fuzzyHaveBlocks(points: IPoint[]): boolean {
+        return points.map((point) => Space.fuzzyGetBlock(point.x, point.y) != undefined).reduce((previous, current) => previous || current, false);
+    }
+
+    public static getCoordinatesForFutureSpaces(currentSpaces: IPoint[], deltaX: number, deltaY: number): IPoint[] {
+        return currentSpaces.map((point) => {
+            return { x: point.x + deltaX, y: point.y + deltaY };
+        });
     }
 }
