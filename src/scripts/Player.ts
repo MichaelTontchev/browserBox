@@ -9,6 +9,7 @@ export class Player implements ISpaceOccupying {
 
     public readonly width = blockSize;
     public readonly height = blockSize * 2;
+    public readonly jumpSpeed = 4;
     public readonly speed = 1;
 
     public isFalling = false;
@@ -43,10 +44,10 @@ export class Player implements ISpaceOccupying {
         const x = this.getX();
         const y = this.getY();
 
-        return [
+        return Space.getCoordinatesForBlocks([
             { x: x, y: y },
             { x: x, y: y + blockSize }
-        ];
+        ]);
     }
 
     public tick() {
@@ -72,13 +73,13 @@ export class Player implements ISpaceOccupying {
                 allowedMovementDisplacement = -remainingDistanceUntilFutureBlock;
             }
         } else if (Keyboard.rightKeyDown) {
-            const coordinatesForFutureSpaces = Space.getCoordinatesForFutureSpaces(this.getCoordinatesForSpaces(), this.speed + this.width, 0);
+            const coordinatesForFutureSpaces = Space.getCoordinatesForFutureSpaces(this.getCoordinatesForSpaces(), this.speed, 0);
             const areFutureBlocksFree = !Space.fuzzyHaveBlocks(coordinatesForFutureSpaces);
 
             if (areFutureBlocksFree) {
                 allowedMovementDisplacement = this.speed;
             } else {
-                const possibleFutureLocation = currPlayerX + this.speed + this.width;
+                const possibleFutureLocation = currPlayerX + this.width + this.speed;
 
                 const beginningOfFutureBlock = possibleFutureLocation - (possibleFutureLocation % blockSize);
 
@@ -105,9 +106,25 @@ export class Player implements ISpaceOccupying {
             return;
         }
 
-        let currPlayerY = this.getY();
+        const coordinatesForFutureSpaces = Space.getCoordinatesForFutureSpaces(this.getCoordinatesForSpaces(), 0, this.jumpSpeed);
+        const areFutureBlocksFree = !Space.fuzzyHaveBlocks(coordinatesForFutureSpaces);
 
-        this.setY(currPlayerY + 4);
+        let allowedMovementDisplacement = 0;
+        const currPlayerY = this.getY();
+
+        if (areFutureBlocksFree) {
+            allowedMovementDisplacement = this.jumpSpeed;
+        } else {
+            const possibleFutureLocation = currPlayerY + this.height + this.jumpSpeed;
+
+            const beginningOfFutureBlock = possibleFutureLocation - (possibleFutureLocation % blockSize);
+
+            const remainingDistanceUntilFutureBlock = beginningOfFutureBlock - (currPlayerY + this.height);
+
+            allowedMovementDisplacement = remainingDistanceUntilFutureBlock;
+        }
+        
+        this.setY(currPlayerY + allowedMovementDisplacement);
 
         this.ascendingTickCount++;
     }

@@ -23,6 +23,24 @@ export class Space {
         });
     }
 
+    public static getCoordinatesForBlock(blockLocation: IPoint): IPoint[] {
+        const x = blockLocation.x;
+        const y = blockLocation.y;
+
+        return [
+            { x: x, y: y },
+            { x: x + blockSize - 1, y: y },
+            { x: x, y: y + blockSize - 1 },
+            { x: x + blockSize - 1, y: y + blockSize - 1 }
+        ];
+    }
+
+    public static getCoordinatesForBlocks(blockLocations: IPoint[]): IPoint[] {
+        return blockLocations
+            .map((location) => Space.getCoordinatesForBlock(location))
+            .reduce((locations, aggregator) => aggregator.concat(locations), []);
+    }
+
     public static fuzzyGetBlock(x: number, y: number): ISpaceOccupying {
         return Space.space[(x - (x % blockSize)) + "_" + (y - (y % blockSize))];
     }
