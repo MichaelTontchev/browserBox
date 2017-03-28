@@ -68,4 +68,13 @@ export const blocks = [
     new Block(195, 405, "brown"),
     new Block(180, 405, "brown"),
     new Block(165, 405, "brown"),
+    new Block(330, 405, "brown"),
+    new Block(345, 405, "brown"),
+    new Block(360, 405, "brown"),
+    new Block(375, 405, "brown"),
+    new Block(390, 405, "brown"),
+    new Block(435, 465, "brown"),
+    new Block(450, 465, "brown"),
+    new Block(0, 405, "brown"),
+    new Block(15, 405, "brown"),
 ];
