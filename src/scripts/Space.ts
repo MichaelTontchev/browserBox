@@ -1,4 +1,3 @@
-import { IBlock } from './Main';
 import { blockSize } from './Constants';
 
 export const gravitySpeed = 2;
