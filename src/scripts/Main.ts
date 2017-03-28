@@ -6,8 +6,6 @@ import { Designer } from './Designer';
 
 export const player = Player.instance;
 
-Designer.setup();
-
 export function renderBlock(block: Block) {
     var node = document.createElement("div");
     node.className = 'block';
@@ -31,4 +29,5 @@ renderElements();
 
 setInterval(function tick() {
     player.tick();
+    Designer.tick();
 }, 5);

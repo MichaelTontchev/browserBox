@@ -1,26 +1,35 @@
 import { renderBlock } from './Main';
 import { Block } from './Block';
-import { canvas, canvasHeight } from './Space';
+import { Space, canvas, canvasHeight } from './Space';
+import { Keyboard } from './Keyboard';
 
 export class Designer {
     private static readonly newMapBlocksDisplay = document.getElementById('newMapBlocks') || new HTMLElement();
 
     private static newBlocks: Block[] = [];
 
-    public static setup() {
-        canvas.addEventListener('click', function (e) {
-            const newBlock = new Block(
-                e.clientX - (canvas.offsetLeft - canvas.scrollLeft + canvas.clientLeft),
-                canvasHeight - (e.clientY - (canvas.offsetTop - canvas.scrollTop + canvas.clientTop)),
-                "brown");
+    public static tick() {
+        if (Keyboard.mouseDown) {
+            Designer.addBlock();
+        }
+    }
 
-            renderBlock(newBlock);
-            Designer.newBlocks.push(newBlock);
+    public static addBlock() {
+        const newBlockX = Keyboard.mouseX - (canvas.offsetLeft - canvas.scrollLeft + canvas.clientLeft);
+        const newBlockY = canvasHeight - (Keyboard.mouseY - (canvas.offsetTop - canvas.scrollTop + canvas.clientTop));
 
-            Designer.newMapBlocksDisplay.innerText = Designer.newBlocks.map((block) => {
-                return "new Block(" + block.x + ", " + block.y + ", " + block.color + "),";
-            }).join('\n');
-        });
+        if(Space.fuzzyHasBlock(newBlockX, newBlockY)) {
+            return;
+        }
+
+        const newBlock = new Block(newBlockX, newBlockY, "brown");
+
+        renderBlock(newBlock);
+        Designer.newBlocks.push(newBlock);
+
+        Designer.newMapBlocksDisplay.innerText = Designer.newBlocks.map((block) => {
+            return "new Block(" + block.x + ", " + block.y + ", \"" + block.color + "\"),";
+        }).join('\n');
     }
 }
 
